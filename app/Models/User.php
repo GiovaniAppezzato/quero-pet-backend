@@ -97,4 +97,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Admin::class);
     }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
 }
