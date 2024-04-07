@@ -8,10 +8,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreOngsRequest;
 use App\Http\Requests\StoreUserRequest;
-use Whoops\Handler\JsonResponseHandler;
 
-class UserController extends Controller
+class OngController extends Controller
 {
     public function index(): JsonResponse
     {
@@ -22,13 +22,16 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function store(StoreUserRequest $request): JsonResponse
+    public function store(StoreUserRequest $request, StoreOngsRequest $ongRequest): JsonResponse
     {
         DB::beginTransaction();
         
         try{
             $user = $request->validated();
+            $ong = $ongRequest->validated();
+
             $user = User::create($user);
+            $ong = $user->ong()->create($ong);
 
             $user->address()->create([
                 'zip_code'     => $request->zip_code,
@@ -42,12 +45,12 @@ class UserController extends Controller
                 'reference_point' => $request->reference_point,
             ]);
 
-        } catch(\Exception $e) {
-            DB::rollBack();
-
-            return response()->json([
-                'error' => $e->getMessage(),
-            ], 500);
+        }catch(\Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            'error' => $e->getMessage(),
+        ], 500);
         }
     }
 }
