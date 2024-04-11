@@ -24,24 +24,47 @@ class AdminController extends Controller
     }
 
 
-    public function store(StoreUserRequest $request, StoreAdminRequest $adminRequest): JsonResponse
+    public function store(StoreAdminRequest $request): JsonResponse
     {
         DB::beginTransaction();
-        
-        try{
-            $user = $request->validated();
-            $admin = $adminRequest->validated();
 
-            $user = User::create($user);
-            $admin = $user->ong()->create($admin);
+        try{
+            $admin = $request->validated();
+
+            $admin->user()->create([
+                'email'    => $request->email,
+                'password' => $request->password
+            ]);
+
+            $admin = User::create([
+                'first_name' => $request->first_name,
+                'last_name'  => $request->last_name,
+                'cpf'        => $request->cpf,
+                'phone'      => $request->phone,
+                'birth_date' => $request->birth_date,
+            ]);
+
+            $credentials = $request->only('email', 'password');
+
+            if(Auth::attempt($credentials)){
+                /** @var User $user */
+                $user = Auth::user();
+                $token = $user->createToken('jwt');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'admin' => $admin,
+                'token' => $token,
+            ], 201);
 
         }catch(\Exception $e) {
-        DB::rollBack();
-        
-        return response()->json([
-            'error' => $e->getMessage(),
-        ], 500);
+            DB::rollBack();
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
-    
+
 }

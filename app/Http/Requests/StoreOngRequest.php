@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCustomerRequest extends FormRequest
+class StoreOngsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,14 +28,16 @@ class StoreCustomerRequest extends FormRequest
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ],
 
-            'customer' => [
-                'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
-                'cpf' => ['required', 'string', 'max:255'],
+            'ong' => [
+                'name' => ['required', 'string', 'max:255'],
+                'description' => ['required', 'string', 'max:255'],
+                'cnpj' => ['required', 'string', 'max:255', 'unique:ongs'],
                 'phone' => ['required', 'string', 'max:255'],
-                'birth_date' => ['required', 'date'],
+                'responsible_name' => ['required', 'string', 'max:255'],
+                'responsible_phone' => ['required', 'string', 'max:255'],
+                'responsible_cpf' => ['required', 'string', 'max:255'],
+                'status' => ['required', 'string', Rule::in(['pending', 'approved', 'rejected'])],
             ]
-
         ];
     }
 }

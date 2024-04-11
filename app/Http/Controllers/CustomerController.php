@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\StoreCustomerRequest;
+use App\Models\Customer;
 
 class CustomerController extends Controller
 {
@@ -22,27 +21,24 @@ class CustomerController extends Controller
             'user' => $user,
         ], 200);
     }
-    public function store(StoreUserRequest $request, StoreCustomerRequest $costumerRequest): JsonResponse
+    public function store(StoreCustomerRequest $request): JsonResponse
     {
         DB::beginTransaction();
-        
+
         try{
-            $user = $request->validated();
-            $customer = $costumerRequest->validated();
+            $customer = $request->validated();
 
-            $user = User::create($user);
-            $customer = $user->customer()->create($customer);
+            $customer->user()->create([
+                'email'    => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-            $user->address()->create([
-                'zip_code'     => $request->zip_code,
-                'street'       => $request->street,
-                'number'       => $request->number,
-                'neighborhood' => $request->neighborhood,
-                'city'         => $request->city,
-                'state'        => $request->state,
-                'country'      => $request->country,
-                'complement'   => $request->complement,
-                'reference_point' => $request->reference_point,
+            $customer = Customer::create([
+                'first_name' => $request->first_name,
+                'last_name'  => $request->last_name,
+                'cpf'        => $request->cpf,
+                'phone'      => $request->phone,
+                'birth_date' => $request->birth_date,
             ]);
 
             $credentials = $request->only('email', 'password');
@@ -66,7 +62,7 @@ class CustomerController extends Controller
 
         return response()->json([
             'error' => $e->getMessage(),
-        ], 500);
+            ], 500);
         }
     }
 
