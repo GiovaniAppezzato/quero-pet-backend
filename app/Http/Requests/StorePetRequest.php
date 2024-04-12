@@ -23,15 +23,15 @@ class StorePetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:255'],
-            'breed' => ['required', 'string', 'max:255'],
-            'age' => ['required', 'string', 'max:255'],
-            'weight' => ['required', 'string', 'max:255'],
-            'color' => ['required', 'string', 'max:255'],
-            'banner' => ['required', 'string', 'max:255'],
-            'sex' => ['required','string',Rule::in(['M', 'F'])],
-            'birth_date' => ['required', 'date'],
+            'name'          => ['required', 'string', 'max:255'],
+            'description'   => ['nullable', 'string', 'max:255'],
+            'breed'         => ['required', 'string', 'max:255'],
+            'age'           => ['required', 'string', 'max:255'],
+            'weight'        => ['required', 'string', 'max:255'],
+            'color'         => ['required', 'string', 'max:255'],
+            'banner'        => ['required', 'string', 'max:255'],
+            'sex'           => ['required','string',Rule::in(['M', 'F'])],
+            'birth_date'    => ['required', 'date'],
             'is_vaccinated' => ['required', 'boolean'],
         ];
     }

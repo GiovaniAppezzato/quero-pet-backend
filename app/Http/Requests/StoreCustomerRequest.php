@@ -23,15 +23,15 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             'user' => [
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ],
 
             'customer' => [
                 'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
-                'cpf' => ['required', 'string', 'max:255'],
-                'phone' => ['required', 'string', 'max:255'],
+                'last_name'  => ['required', 'string', 'max:255'],
+                'cpf'        => ['required', 'string', 'max:255'],
+                'phone'      => ['required', 'string', 'max:255'],
                 'birth_date' => ['required', 'date'],
             ]
 

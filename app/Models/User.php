@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Scopes\WithInformationScope;
 use App\Actions\GetInformationRelationship;
+use App\Enums\UserTypeEnum;
 
 class User extends Authenticatable
 {
@@ -56,6 +57,14 @@ class User extends Authenticatable
     protected static function booted(): void
     {
         static::addGlobalScope(new WithInformationScope);
+    }
+
+    /**
+     * Scope a query to include only admin users.
+     */
+    public function scopeAdmins($query)
+    {
+        return $query->whereUserTypeId(UserTypeEnum::ADMIN->value);
     }
 
     /**
