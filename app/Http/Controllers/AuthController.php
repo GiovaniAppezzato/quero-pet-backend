@@ -17,7 +17,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if(Auth::attempt($credentials)){
+        if (Auth::attempt($credentials)) {
             /** @var User $user */
             $user = Auth::user();
             $authToken = $user->createToken('authToken');
@@ -27,6 +27,7 @@ class AuthController extends Controller
                 'user' => $user
             ], 201);
 
+            //teste 
             /* return new AuthenticateResource([
                 'token' => $authToken->plainTextToken,
                 'user' => $user
