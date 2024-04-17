@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -9,7 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreCustomerRequest;
-use App\Models\Customer;
+use App\Http\Requests\UpdateCustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -78,6 +80,35 @@ class CustomerController extends Controller
 
         return response()->json([
             'status' => false,
+        ], 200);
+    }
+
+    public function update(UpdateCustomerRequest $request, Customer $customer): JsonResponse
+    {
+        $data = $request->validated();
+        $customer->update($data);
+
+        return response()->json([
+            'success' => true,
+            'customer' => $customer
+        ], 200);
+    }
+
+    public function resetLoggedPassword(User $user, Request $request)
+    {
+        $this->validate($request, [
+            'new_password' => 'required|confirmed|min:8',
+        ]);
+
+        $newPassword = $request->input('new_password');
+
+        $user->update([
+            'password' => bcrypt($newPassword),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password reseted successfully',
         ], 200);
     }
 }

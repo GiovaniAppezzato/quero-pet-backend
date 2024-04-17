@@ -34,7 +34,6 @@ class StoreCustomerRequest extends FormRequest
                 'phone'      => ['required', 'string', 'max:255'],
                 'birth_date' => ['required', 'date'],
             ]
-
         ];
     }
 }
