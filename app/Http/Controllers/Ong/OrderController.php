@@ -26,35 +26,6 @@ class OrderController extends Controller
         ]);
     }
 
-    public function store($petId, $ongId)
-    {
-        DB::beginTransaction();
-
-        try{
-            $user = Auth::user();
-
-            $order = Order::create([
-                'status'      => 'pending',
-                'pet_id'      => $petId,
-                'customer_id' => $user->id,
-                'ong_id'      => $ongId
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'order'  => $order,
-            ], 201);
-        }
-        catch(\Exception $e){
-            DB::rollBack();
-
-            return response()->json([
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
     public function destroy($orderId)
     {
         $order = Order::findOrFail($orderId);
