@@ -12,9 +12,9 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $customer = Auth::user();
+        $adopter = Auth::user();
 
-        $orders = Order::where('customer_id', $customer->id)->get();
+        $orders = Order::where('adopter_id', $adopter->id)->get();
 
         return response()->json([
             'orders' => $orders
@@ -40,7 +40,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'status'      => 'pending',
                 'pet_id'      => $request->pet_id,
-                'customer_id' => $user->id,
+                'adopter_id' => $user->id,
                 'ong_id'      => $request->ong_id
             ]);
 

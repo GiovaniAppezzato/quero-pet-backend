@@ -22,12 +22,12 @@ class UpdateOngRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'uesr' => [
+            'user' => [
                 'email'     => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password'  => ['required', 'string', 'min:8', 'confirmed'],
             ],
 
-            'customer'  => [
+            'ong'  => [
                 'name'         =>  ['required', 'string', 'max:255'],
                 'description'  =>  ['required', 'string', 'max:255'],
                 'cnpj'         =>  ['required', 'string', 'max:255', 'unique:ongs'],

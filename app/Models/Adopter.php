@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Customer extends Model
+class Adopter extends Model
 {
     use HasFactory, HasFactory;
 
@@ -38,7 +38,7 @@ class Customer extends Model
     }
 
     /**
-     * Get the user that owns the Customer
+     * Get the user that owns the adopter
      */
     public function user(): BelongsTo
     {

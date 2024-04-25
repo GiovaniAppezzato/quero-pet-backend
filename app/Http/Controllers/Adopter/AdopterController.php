@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Customer;
+use App\Models\Adopter;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Requests\StoreAdopterRequest;
+use App\Http\Requests\UpdateAdopterRequest;
 
-class CustomerController extends Controller
+class adopterController extends Controller
 {
     public function index(): JsonResponse
     {
@@ -23,19 +23,19 @@ class CustomerController extends Controller
             'user' => $user,
         ], 200);
     }
-    public function store(StoreCustomerRequest $request): JsonResponse
+    public function store(StoreAdopterRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
         try{
-            $customer = $request->validated();
+            $adopter = $request->validated();
 
-            $customer->user()->create([
+            $adopter->user()->create([
                 'email'    => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
-            $customer = Customer::create([
+            $adopter = Adopter::create([
                 'first_name' => $request->first_name,
                 'last_name'  => $request->last_name,
                 'cpf'        => $request->cpf,
@@ -83,14 +83,14 @@ class CustomerController extends Controller
         ], 200);
     }
 
-    public function update(UpdateCustomerRequest $request, Customer $customer): JsonResponse
+    public function update(UpdateAdopterRequest $request, Adopter $adopter): JsonResponse
     {
         $data = $request->validated();
-        $customer->update($data);
+        $adopter->update($data);
 
         return response()->json([
             'success' => true,
-            'customer' => $customer
+            'adopter' => $adopter
         ], 200);
     }
 

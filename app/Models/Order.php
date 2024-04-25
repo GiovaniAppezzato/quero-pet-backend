@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Adopter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
@@ -21,9 +22,9 @@ class Order extends Model
         ];
     }
 
-    function customer()
+    function adopter()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Adopter::class);
     }
 
     function pet()

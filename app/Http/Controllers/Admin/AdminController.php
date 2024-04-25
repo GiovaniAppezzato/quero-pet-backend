@@ -68,7 +68,7 @@ class AdminController extends Controller
 
         return response()->json([
             'success' => true,
-            'customer' => $admin
+            'adopter' => $admin
         ], 200);
     }
 

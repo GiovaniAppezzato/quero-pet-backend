@@ -3,15 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Adopter;
+use App\Enums\UserTypeEnum;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use App\Actions\GetInformationRelationship;
+use App\Models\Scopes\WithInformationScope;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Scopes\WithInformationScope;
-use App\Actions\GetInformationRelationship;
-use App\Enums\UserTypeEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -92,11 +93,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the Customer associated with the User
+     * Get the Adopter associated with the User
      */
-    public function customer(): HasOne
+    public function adopter(): HasOne
     {
-        return $this->hasOne(Customer::class);
+        return $this->hasOne(Adopter::class);
     }
 
     /**

@@ -11,9 +11,9 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $customer = Auth::user();
+        $adopter = Auth::user();
 
-        $orders = Order::where('customer_id', $customer->id)->get();
+        $orders = Order::where('adopter_id', $adopter->id)->get();
 
         return response()->json([
             'orders' => $orders
