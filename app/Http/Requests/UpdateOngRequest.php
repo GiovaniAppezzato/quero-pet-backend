@@ -31,6 +31,7 @@ class UpdateOngRequest extends FormRequest
                 'name'         =>  ['required', 'string', 'max:255'],
                 'description'  =>  ['required', 'string', 'max:255'],
                 'cnpj'         =>  ['required', 'string', 'max:255', 'unique:ongs'],
+                'phone'        =>  ['required', 'string', 'max:255'],
             ]
         ];
     }
