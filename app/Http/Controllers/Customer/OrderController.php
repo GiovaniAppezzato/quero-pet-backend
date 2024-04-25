@@ -21,7 +21,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function getOrder($orderId): JsonResponse
+    public function show($orderId): JsonResponse
     {
         $order = Order::findOrFail($orderId);
 
@@ -30,7 +30,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function store($petId, $ongId)
+    public function store(Request $request)
     {
         DB::beginTransaction();
 
@@ -39,9 +39,9 @@ class OrderController extends Controller
 
             $order = Order::create([
                 'status'      => 'pending',
-                'pet_id'      => $petId,
+                'pet_id'      => $request->pet_id,
                 'customer_id' => $user->id,
-                'ong_id'      => $ongId
+                'ong_id'      => $request->ong_id
             ]);
 
             DB::commit();
