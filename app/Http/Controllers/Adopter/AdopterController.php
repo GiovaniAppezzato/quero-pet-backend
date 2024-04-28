@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Adopter;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\StoreCustomerRequest;
-use App\Models\Customer;
+use App\Http\Requests\StoreAdopterRequest;
+use App\Http\Requests\UpdateAdopterRequest;
 
-class CustomerController extends Controller
+class adopterController extends Controller
 {
     public function index(): JsonResponse
     {
@@ -21,19 +23,19 @@ class CustomerController extends Controller
             'user' => $user,
         ], 200);
     }
-    public function store(StoreCustomerRequest $request): JsonResponse
+    public function store(StoreAdopterRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
         try{
-            $customer = $request->validated();
+            $adopter = $request->validated();
 
-            $customer->user()->create([
+            $adopter->user()->create([
                 'email'    => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
-            $customer = Customer::create([
+            $adopter = Adopter::create([
                 'first_name' => $request->first_name,
                 'last_name'  => $request->last_name,
                 'cpf'        => $request->cpf,
@@ -78,6 +80,35 @@ class CustomerController extends Controller
 
         return response()->json([
             'status' => false,
+        ], 200);
+    }
+
+    public function update(UpdateAdopterRequest $request, Adopter $adopter): JsonResponse
+    {
+        $data = $request->validated();
+        $adopter->update($data);
+
+        return response()->json([
+            'success' => true,
+            'adopter' => $adopter
+        ], 200);
+    }
+
+    public function resetLoggedPassword(User $user, Request $request)
+    {
+        $this->validate($request, [
+            'new_password' => 'required|confirmed|min:8',
+        ]);
+
+        $newPassword = $request->input('new_password');
+
+        $user->update([
+            'password' => bcrypt($newPassword),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password reseted successfully',
         ], 200);
     }
 }

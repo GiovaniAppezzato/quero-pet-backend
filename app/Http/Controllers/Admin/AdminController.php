@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Http\Requests\StoreAdminRequest;
 use App\Enums\UserTypeEnum;
 use App\Models\User;
-
 class AdminController extends Controller
 {
     public function index()
@@ -15,12 +15,12 @@ class AdminController extends Controller
         return UserResource::collection(User::admins()->get());
     }
 
-    public function show(User $user)
+    public function show(User $user): UserResource
     {
         return new UserResource($user);
     }
 
-    public function store(Request $request)
+    public function store(StoreAdminRequest $request): UserResource
     {
         $validated = $request->validated();
 
@@ -34,7 +34,7 @@ class AdminController extends Controller
         return new UserResource($user);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): UserResource
     {
         $validated = $request->validated();
 

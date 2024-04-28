@@ -17,7 +17,7 @@ return new class extends Migration
             $table->dateTime('canceled_at')->nullable();
             $table->dateTime('adopted_at')->nullable();
             $table->foreignId('pet_id')->constrained()->onDelete('cascade');
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
+            $table->foreignId('adopter_id')->constrained()->onDelete('cascade');
             $table->foreignId('ong_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreOngRequest;
+use App\Http\Requests\UpdateOngRequest;
 
 class OngController extends Controller
 {
@@ -65,5 +66,17 @@ class OngController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function update(UpdateOngRequest $request, Ong $ong): JsonResponse
+    {
+        $data = $request->validated();
+        $ong->update($data);
+
+        //Retorno em JSON, ou como uma view qualquer?
+        return response()->json([
+            'success' => true,
+            'ong' => $ong
+        ]);
     }
 }

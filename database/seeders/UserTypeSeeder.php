@@ -21,7 +21,7 @@ class UserTypeSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Customer',
+                'name' => 'Adopter',
                 'description' => 'This is the client user, responsible for adopting the pets through the mobile application.',
                 'created_at' => now(),
                 'updated_at' => now(),
