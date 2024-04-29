@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Ong;
 
 use App\Models\Ong;
 use Illuminate\Http\Request;

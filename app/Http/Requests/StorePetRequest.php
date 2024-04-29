@@ -23,23 +23,18 @@ class StorePetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user' => [
-                'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-            ],
-
-            'pet'  => [
-                'name'          => ['required', 'string', 'max:255'],
-                'description'   => ['nullable', 'string', 'max:255'],
-                'breed'         => ['required', 'string', 'max:255'],
-                'age'           => ['required', 'string', 'max:255'],
-                'weight'        => ['required', 'string', 'max:255'],
-                'color'         => ['required', 'string', 'max:255'],
-                'banner'        => ['required', 'string', 'max:255'],
-                'sex'           => ['required', 'string', Rule::in(['M', 'F'])],
-                'birth_date'    => ['required', 'date'],
-                'is_vaccinated' => ['required', 'boolean'],
-            ]
+            'name'          => ['required', 'string', 'max:255'],
+            'description'   => ['nullable', 'string', 'max:255'],
+            'breed'         => ['required', 'string', 'max:255'],
+            'age'           => ['required', 'string', 'max:255'],
+            'weight'        => ['required', 'string', 'max:255'],
+            'color'         => ['required', 'string', 'max:255'],
+            'banner'        => ['required', 'string', 'max:255'],
+            'sex'           => ['required', 'string', Rule::in(['M', 'F'])],
+            'birth_date'    => ['required', 'date'],
+            'is_vaccinated' => ['required', 'boolean'],
+            'photos.*'      => ['required', 'string', 'max:255'],
+            'category_id'   => ['required', 'exists:categories,id'],
         ];
     }
 }

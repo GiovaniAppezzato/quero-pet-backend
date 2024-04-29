@@ -1,8 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdopterController;
 use App\Http\Controllers\Adopter\OrderController;
-use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('adopter', AdopterController::class)->only(['store', 'update']);
