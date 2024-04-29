@@ -43,16 +43,18 @@ class AdminController extends Controller
 
     public function update(UpdateAdminRequest $request, $id): UserResource
     {
-        $user = User::findOrFail($id);
+        return DB::transaction(function () use ($request, $id) {
+            $user = User::findOrFail($id);
 
-        $validated = $request->validated();
+            $validated = $request->validated();
 
-        // ** Update the user record.
-        $user->update($validated['user']);
+            // ** Update the user record.
+            $user->update($validated['user']);
 
-        // ** Update the admin record.
-        $user->admin->update($validated['admin']);
+            // ** Update the admin record.
+            $user->admin->update($validated['admin']);
 
-        return new UserResource($user);
+            return new UserResource($user);
+        });
     }
 }

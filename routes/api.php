@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
@@ -10,10 +9,7 @@ Route::apiResource('/categories', CategoryController::class)->only('index', 'sho
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/sign-out', [AuthController::class, 'destroy']);
-
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    })->middleware('auth:sanctum');
+    Route::get('/show-me', [AuthController::class, 'show']);
 });
 
 require __DIR__.'/admin.php';
