@@ -18,7 +18,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'information' => new InformationResource($this->information || null),
+            'information' => new InformationResource($this->information),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

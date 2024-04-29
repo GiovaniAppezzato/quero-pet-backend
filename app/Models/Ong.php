@@ -50,11 +50,17 @@ class Ong extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get the orders for the Ong
+     */
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
+    /**
+     * Get the pets for the Ong
+     */
     public function pets(): HasMany
     {
         return $this->hasMany(Pet::class);

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Http\Requests\StoreAdminRequest;
 use App\Enums\UserTypeEnum;
 use App\Models\User;
+use App\Http\Resources\UserResource;
+use App\Http\Requests\StoreAdminRequest;
+use App\Http\Requests\UpdateAdminRequest;
+
 class AdminController extends Controller
 {
     public function index()
@@ -15,34 +18,40 @@ class AdminController extends Controller
         return UserResource::collection(User::admins()->get());
     }
 
-    public function show(User $user): UserResource
+    public function show($id): UserResource
     {
-        return new UserResource($user);
+        return new UserResource(User::findOrFail($id));
     }
 
     public function store(StoreAdminRequest $request): UserResource
     {
-        $validated = $request->validated();
+        return DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-        // ** Create a new user record.
-        $user = User::create([
-            ...$validated->user,
-            'password'     => bcrypt($request->password),
-            'user_type_id' => UserTypeEnum::ADMIN->value
-        ])->admin()->create($validated->admin);
+            $user = User::create([
+                ...$validated['user'],
+                'password'     => bcrypt($request->password),
+                'user_type_id' => UserTypeEnum::ADMIN->value,
+                'created_by'   => Auth::id()
+            ]);
 
-        return new UserResource($user);
+            $user->admin()->create($validated['admin']);
+
+            return new UserResource($user);
+        });
     }
 
-    public function update(Request $request, User $user): UserResource
+    public function update(UpdateAdminRequest $request, $id): UserResource
     {
+        $user = User::findOrFail($id);
+
         $validated = $request->validated();
 
         // ** Update the user record.
-        $user->update($validated->user);
+        $user->update($validated['user']);
 
         // ** Update the admin record.
-        $user->admin->update($validated->admin);
+        $user->admin->update($validated['admin']);
 
         return new UserResource($user);
     }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAdminRequest extends FormRequest
 {
@@ -23,10 +25,9 @@ class StoreAdminRequest extends FormRequest
     {
         return [
             'user' => [
-                'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'email'    => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)],
+                'password' => ['required', 'string', 'min:6'],
             ],
-
             'admin' => [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name'  =>  ['required', 'string', 'max:255'],

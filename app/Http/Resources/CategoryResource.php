@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AuthenticateResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,13 +15,9 @@ class AuthenticateResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'plain_text_token' => $this['plain_text_token'],
-            'user' => new UserResource($this['user'])
+            'id'   => $this->id,
+            'name' => $this->name,
+            'description' => $this->description
         ];
-    }
-
-    public function withResponse($request, $response)
-    {
-        $response->setStatusCode(201);
     }
 }

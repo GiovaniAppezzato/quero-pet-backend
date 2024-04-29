@@ -13,7 +13,7 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function store(AuthenticateRequest $request): JsonResponse
+    public function store(AuthenticateRequest $request): AuthenticateResource|JsonResponse
     {
         $credentials = $request->only('email', 'password');
 
@@ -22,19 +22,13 @@ class AuthController extends Controller
             $user = Auth::user();
             $authToken = $user->createToken('authToken');
 
-            return Response::json([
-                'token' => $authToken->plainTextToken,
+            return new AuthenticateResource([
+                'plain_text_token' => $authToken->plainTextToken,
                 'user' => $user
-            ], 201);
-
-            //teste 
-            /* return new AuthenticateResource([
-                'token' => $authToken->plainTextToken,
-                'user' => $user
-            ]); */
+            ]);
         }
 
-        return Response::json('Credenciais inválidas', 401);
+        return Response::json(null, 401);
     }
 
     public function destroy(Request $request): JsonResponse
