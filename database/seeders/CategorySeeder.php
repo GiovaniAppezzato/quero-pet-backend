@@ -15,22 +15,25 @@ class CategorySeeder extends Seeder
     {
         Category::insert([
             [
-                'name' => 'Cats',
-                'description' => 'This is the category of cats.',
+                'name' => 'Gatos',
+                'description' => 'Esta é a categoria de gatos.',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'icon' => 'cat'
             ],
             [
-                'name' => 'Dogs',
-                'description' => 'This is the category of dogs.',
+                'name' => 'Cachorros',
+                'description' => 'Esta é a categoria de cachorros.',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'icon' => 'dog'
             ],
             [
-                'name' => 'Birds',
-                'description' => 'This is the category of birds.',
+                'name' => 'Pássaros',
+                'description' => 'Esta é a categoria de pássaros.',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'icon' => 'bird'
             ]
         ]);
     }

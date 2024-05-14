@@ -1,114 +1,35 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Adopter;
 
-use App\Models\User;
-use App\Models\Adopter;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreAdopterRequest;
-use App\Http\Requests\UpdateAdopterRequest;
+use App\Http\Resources\UserResource;
+use App\Enums\UserTypeEnum;
+use App\Models\User;
 
-class adopterController extends Controller
+class AdopterController extends Controller
 {
-    public function index(): JsonResponse
+    public function store(StoreAdopterRequest $request): UserResource
     {
-        $user = Auth::user();
+        return DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-        return response()->json([
-            'user' => $user,
-        ], 200);
-    }
-    public function store(StoreAdopterRequest $request): JsonResponse
-    {
-        DB::beginTransaction();
-
-        try{
-            $adopter = $request->validated();
-
-            $adopter->user()->create([
-                'email'    => $request->email,
-                'password' => Hash::make($request->password),
+            // ** Create the user record.
+            $user = User::create([
+                ...$validated['user'],
+                'password'     => bcrypt($request->password),
+                'user_type_id' => UserTypeEnum::ADOPTER->value,
             ]);
 
-            $adopter = Adopter::create([
-                'first_name' => $request->first_name,
-                'last_name'  => $request->last_name,
-                'cpf'        => $request->cpf,
-                'phone'      => $request->phone,
-                'birth_date' => $request->birth_date,
-            ]);
+            // ** Create the adopter record.
+            $user->adopter()->create($validated['adopter']);
 
-            $credentials = $request->only('email', 'password');
+            // ** Create the address record.
+            $user->address()->create($validated['address']);
 
-            if(Auth::attempt($credentials)){
-                /** @var User $user */
-                $user = Auth::user();
-                $token = $user->createToken('jwt');
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'user' => $user,
-                'token' => $token,
-            ], 201);
-
-        }catch(\Exception $e) {
-
-        DB::rollBack();
-
-        return response()->json([
-            'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    public function confirmPassword(Request $request)
-    {
-        $password = $request['password'];
-
-        if(Hash::check($password, Auth::user()->password)) {
-            return response()->json([
-                'status' => true,
-            ], 200);
-        }
-
-        return response()->json([
-            'status' => false,
-        ], 200);
-    }
-
-    public function update(UpdateAdopterRequest $request, Adopter $adopter): JsonResponse
-    {
-        $data = $request->validated();
-        $adopter->update($data);
-
-        return response()->json([
-            'success' => true,
-            'adopter' => $adopter
-        ], 200);
-    }
-
-    public function resetLoggedPassword(User $user, Request $request)
-    {
-        $this->validate($request, [
-            'new_password' => 'required|confirmed|min:8',
-        ]);
-
-        $newPassword = $request->input('new_password');
-
-        $user->update([
-            'password' => bcrypt($newPassword),
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Password reseted successfully',
-        ], 200);
+            return new UserResource($user);
+        });
     }
 }

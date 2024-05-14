@@ -8,6 +8,6 @@ Route::post('/ongs', [OngController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/ongs')->group(function () {
-        Route::apiResource('/orders', OrderController::class)->only('index', 'show', 'update');
+        // Route::apiResource('/orders', OrderController::class)->only('index', 'show', 'update');
     });
 });

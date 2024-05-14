@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('photos', function (Blueprint $table) {
-            $table->id();
-            $table->string('path');
-            $table->foreignId('pet_id')->constrained('pets');
-            $table->timestamps();
+        Schema::table('categories', function (Blueprint $table) {
+            $table->boolean('status')->default(true);
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('photos');
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 };
