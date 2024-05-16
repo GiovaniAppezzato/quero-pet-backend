@@ -2,7 +2,9 @@
 
 namespace App\Actions;
 
-class SavePhotos
+use Illuminate\Support\Str;
+
+class SavePetPhotos
 {
     /**
      * Create a new class instance.
@@ -12,20 +14,29 @@ class SavePhotos
         //
     }
 
-    public function handle($pet,  $photos): void
+    public function handle($pet, $photos): void
     {
-        foreach ($photos as $photo) {
-            $fileName = $pet->id . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
-            $path = $photo->storeAs('pet_photos', $fileName);
+        $photosToBeInserted = [];
 
-            $pet->photos()->create([
+        foreach ($photos as $photo) {
+            $timestamp = now()->timestamp;
+            $randomString = Str::random(10);
+            $hash = hash('sha256', $timestamp . $randomString);
+            $extension = $photo->getClientOriginalExtension();
+            $filename = $hash . '.' . $extension;
+
+            $path = $photo->file('pet_photo')->storeAs('pet_photos', $filename);
+
+            array_push($photosToBeInserted, [
                 'path' => $path
             ]);
         }
+
+        $pet->photos()->insert($photosToBeInserted);
     }
 
-    public static function run(...$arguments, $pet, $photos): void
+    public static function run(...$arguments): void
     {
-        (new self(...$arguments))->handle($pet, $photos);
+        (new self(...$arguments))->handle();
     }
 }
