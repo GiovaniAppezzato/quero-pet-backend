@@ -62,6 +62,6 @@ class Pet extends Model
      */
     public function photos()
     {
-        return $this->belongsToMany(Photo::class);
+        return $this->belongsToMany(PetPhoto::class);
     }
 }
