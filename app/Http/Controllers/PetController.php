@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pet;
+use App\Actions\SavePetPhotos;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PetResource;
 use App\Http\Requests\StorePetRequest;
 use App\Http\Requests\UpdatePetRequest;
-use App\Models\Pet;
 
 class PetController extends Controller
 {
@@ -28,7 +29,9 @@ class PetController extends Controller
 
             $pet = Pet::create($validated);
 
-            // (new SavePetPhotos($pet, $validated['photos']))->handle();
+            if($request->has('photos')) {
+                (new SavePetPhotos())->handle($pet, $validated->photos);
+            }
 
             return new PetResource($pet);
         });
