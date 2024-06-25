@@ -69,6 +69,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Scope a query to include only adopter users.
+     */
+    public function scopeAdopters($query)
+    {
+        return $query->whereUserTypeId(UserTypeEnum::ADOPTER->value);
+    }
+
+    /**
      * Get the information associated with the User
      */
     public function information(): HasOne
@@ -108,6 +116,9 @@ class User extends Authenticatable
         return $this->hasOne(Admin::class);
     }
 
+    /**
+     * Get the Address associated with the User
+     */
     public function address()
     {
         return $this->hasOne(Address::class);
