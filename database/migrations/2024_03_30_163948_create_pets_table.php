@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('breed');
             $table->string('age');
             $table->string('weight');
-            $table->string("color");
+            $table->string('color');
             $table->string('banner');
-            $table->enum("sex", ["M", "F"]);
+            $table->enum('sex', ['M', 'F']);
             $table->date("birth_date")->nullable();
             $table->boolean('is_vaccinated');
             $table->foreignId('ong_id')->constrained('ongs');

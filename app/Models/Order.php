@@ -12,6 +12,12 @@ class Order extends Model
 
     protected $fillable = [
         'status',
+        'criminal_record',
+        'canceled_at',
+        'adopted_at',
+        'pet_id',
+        'adopter_id',
+        'ong_id',
     ];
 
     protected function casts(): array

@@ -17,6 +17,5 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::apiResource('/categories', CategoryController::class)->only('index', 'show');
 });
 
-require __DIR__.'/admin.php';
 require __DIR__.'/adopter.php';
 require __DIR__.'/ong.php';

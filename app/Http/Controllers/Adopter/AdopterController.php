@@ -42,4 +42,6 @@ class AdopterController extends Controller
             return new UserResource($user);
         });
     }
+
+    // TODO: Implement the update method.
 }

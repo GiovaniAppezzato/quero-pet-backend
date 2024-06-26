@@ -7,6 +7,6 @@ Route::apiResource('/adopters', AdopterController::class)->only('store', 'update
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::prefix('/adopters')->group(function () {
-        // Route::apiResource('/orders', OrderController::class)->only('index', 'show', 'update');
+        Route::apiResource('/orders', OrderController::class)->only('index', 'show', 'store');
     });
 });

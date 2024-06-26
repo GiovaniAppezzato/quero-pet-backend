@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
+use App\Models\Adopter;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAdopterRequest extends FormRequest
 {
@@ -23,36 +26,27 @@ class UpdateAdopterRequest extends FormRequest
     {
         return [
             'user' => [
-                'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'email'      => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+                'photo_path' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048']
             ],
-
             'adopter' => [
                 'first_name' => ['required', 'string', 'max:255'],
-                'last_name'  =>  ['required', 'string', 'max:255'],
-                'cpf'        =>  ['required', 'string', 'max:255'],
-                'phone'      =>  ['required', 'string', 'max:255'],
-                'birth_date' =>  ['required', 'date'],
+                'last_name'  => ['required', 'string', 'max:255'],
+                'cpf'        => ['required', 'string', 'max:255', Rule::unique(Adopter::class)->ignore($this->user()->adopter->id)],
+                'phone'      => ['required', 'string', 'max:255'],
+                'birth_date' => ['required', 'date'],
+            ],
+            'address' => [
+                'zip_code'        => ['required', 'string', 'max:255'],
+                'street'          => ['required', 'string', 'max:255'],
+                'number'          => ['required', 'string', 'max:255'],
+                'neighborhood'    => ['required', 'string', 'max:255'],
+                'city'            => ['required', 'string', 'max:255'],
+                'state'           => ['required', 'string', 'max:255'],
+                'country'         => ['required', 'string', 'max:255'],
+                'complement'      => ['nullable', 'string', 'max:255'],
+                'reference_point' => ['nullable', 'string', 'max:255'],
             ]
         ];
     }
-
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException
-     */
-
-    // protected function failedValidation(Validator $validator): void
-    // {
-    //     $response = new JsonResponse([
-    //         'success' => false,
-    //         'errors' => $validator->errors(),
-    //     ], 422);
-
-    //     throw new HttpResponseException($response);
-    // }
 }

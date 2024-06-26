@@ -12,7 +12,7 @@ use App\Http\Requests\UpdatePetRequest;
 
 class PetController extends Controller
 {
-    public function index()
+    public function index(): PetResource
     {
         return PetResource::collection(Pet::all());
     }

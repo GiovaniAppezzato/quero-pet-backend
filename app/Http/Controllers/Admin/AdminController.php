@@ -5,15 +5,14 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\{StoreAdminRequest,UpdateAdminRequest};
 use App\Http\Resources\UserResource;
-use App\Http\Requests\StoreAdminRequest;
-use App\Http\Requests\UpdateAdminRequest;
 use App\Enums\UserTypeEnum;
 use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index():UserResource
     {
         return UserResource::collection(User::admins()->get());
     }
