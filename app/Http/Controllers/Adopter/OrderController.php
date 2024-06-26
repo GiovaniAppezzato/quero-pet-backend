@@ -22,6 +22,21 @@ class OrderController extends Controller
         ], 200);
     }
 
+    public function show($orderId)
+    {
+        $order = Order::find($orderId);
+        $pet = $order->pet;
+        $adopter = $order->adopter;
+        $ong = $order->ong;
+
+        return response()->json([
+            'order' => $order,
+            'pet' => $pet,
+            'adopter' => $adopter,
+            'ong' => $ong
+        ], 200);
+    }
+
     public function store($petId) //Q: Or Request?
     {
         return DB::transaction(function () use ($petId) {

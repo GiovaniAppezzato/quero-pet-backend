@@ -13,7 +13,7 @@ class OrderController extends Controller
     public function index()
     {
         //Get all the orders that have this ong id
-
+        
         $ongId = Auth::user()->ong->id;
 
         $orders = Order::where('ong_id', $ongId)->get();
