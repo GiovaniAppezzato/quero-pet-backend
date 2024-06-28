@@ -39,6 +39,17 @@ class AdopterController extends Controller
             // ** Create the address record.
             $user->address()->create($validated['address']);
 
+            if ($request->hasFile('photo')) {
+                $file = $request->file('photo');
+                $extension = $file->extension();
+
+                $hash = md5($file->getClientOriginalName() . strtotime('now')) . "." . $extension;
+                $file->storeAs('users', $hash);
+
+                $user->photo_path = $hash;
+                $user->save();
+            }
+
             return new UserResource($user);
         });
     }
