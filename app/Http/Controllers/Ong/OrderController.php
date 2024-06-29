@@ -2,57 +2,51 @@
 
 namespace App\Http\Controllers\Ong;
 
-use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(): OrderResource
     {
-        //Get all the orders that have this ong id
-        
-        $ongId = Auth::user()->ong->id;
-
-        $orders = Order::where('ong_id', $ongId)->get();
-
-        return response()->json([
-            'orders' => $orders
-        ], 200);
+        $auth = Auth::user();
+        return OrderResource::collection(Order::with('pet', 'adopter')->whereOngId($auth->information->id)->get());
     }
 
-    public function show($orderId)
+    public function show($id): OrderResource
     {
-        $order = Order::find($orderId);
-        $adopter = $order->adopter;
-
-        return response()->json([
-            'order' => $order,
-            'adopter' => $adopter
-        ], 200);
+        $order = Order::with('pet', 'adopter')->findOrFail($id);
+        return new OrderResource($order);
     }
 
-    public function acceptOrder($orderId)
+    public function approveOrder(ApproveOrderRequest $request)
     {
-        return DB::transaction(function () use ($orderId) {
-            $order = Order::findOrFail($orderId);
-            $order->update([
-                'status' => 'accepted',
-                'adopted_at' => now(),
-            ]);
-        });
+        $orderId = $request->order_id;
+
+        $order = Order::findOrFail($orderId)->update([
+            'status' => 'accepted',
+            'adopted_at' => now(),
+        ]);
+
+        // TODO: Send email to the adopter
+
+        return new OrderResource($order);
     }
 
-    public function cancelOrder($orderId)
+    public function cancelOrder(CancelOrderRequest $request)
     {
-        return DB::transaction(function () use ($orderId) {
-            $order = Order::findOrFail($orderId);
-            $order->update([
-                'status' => 'canceled',
-                'canceled_at' => now(),
-            ]);
-        });
+        $orderId = $request->order_id;
+
+        $order = Order::findOrFail($orderId)->update([
+            'status' => 'canceled',
+            'canceled_at' => now(),
+        ]);
+
+        // TODO: Send email to the adopter
+
+        return new OrderResource($order);
     }
 }

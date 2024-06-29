@@ -5,34 +5,26 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\{StoreAdminRequest,UpdateAdminRequest};
 use App\Http\Resources\UserResource;
-use App\Http\Requests\StoreAdminRequest;
-use App\Http\Requests\UpdateAdminRequest;
 use App\Enums\UserTypeEnum;
 use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function index()
-    {
-        return UserResource::collection(User::admins()->get());
-    }
-
-    public function show($id): UserResource
-    {
-        return new UserResource(User::findOrFail($id));
-    }
-
     public function store(StoreAdminRequest $request): UserResource
     {
         return DB::transaction(function () use ($request) {
             $validated = $request->validated();
 
+            if($request->hasFile('photo_path')) {
+                // TODO: Implement the upload 'photo_path' logic.
+            }
+
             $user = User::create([
                 ...$validated['user'],
-                'password'     => bcrypt($request->password),
-                'user_type_id' => UserTypeEnum::ADMIN->value,
-                'created_by'   => Auth::id()
+                'password'     => bcrypt($validated['user']['password']),
+                'user_type_id' => UserTypeEnum::ADMIN->value
             ]);
 
             $user->admin()->create($validated['admin']);
@@ -41,10 +33,10 @@ class AdminController extends Controller
         });
     }
 
-    public function update(UpdateAdminRequest $request, $id): UserResource
+    public function update(UpdateAdminRequest $request): UserResource
     {
-        return DB::transaction(function () use ($request, $id) {
-            $user = User::findOrFail($id);
+        return DB::transaction(function () use ($request) {
+            $user = User::findOrFail(Auth::id());
 
             $validated = $request->validated();
 

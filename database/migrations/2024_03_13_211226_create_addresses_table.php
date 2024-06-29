@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('complement')->nullable();
             $table->string('reference_point')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\AdopterController;
+use App\Http\Controllers\AdminController;
 
 Route::post('/sign-in', [AuthController::class, 'store']);
 Route::post('/recover-password', [AuthController::class, 'recoverPassword']);
@@ -15,6 +17,9 @@ Route::middleware('auth:sanctum')->group(function (){
 
     Route::apiResource('/pets', PetController::class);
     Route::apiResource('/categories', CategoryController::class)->only('index', 'show');
+    Route::apiResource('/adopters', AdopterController::class)->only('index', 'show');
+    Route::apiResource('/admins', AdminController::class)->only('index', 'show');
+    Route::apiResource('/ongs', AdminController::class)->only('index', 'show');
 });
 
 require __DIR__.'/admin.php';

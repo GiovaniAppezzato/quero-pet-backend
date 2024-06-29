@@ -34,7 +34,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return Response::json(null, 401);
+        return Response::json("The provided credentials are incorrect.", 401);
     }
 
     public function destroy(Request $request): JsonResponse

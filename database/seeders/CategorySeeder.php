@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 
@@ -34,6 +34,20 @@ class CategorySeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
                 'icon' => 'bird'
+            ],
+            [
+                'name' => 'Peixes',
+                'description' => 'Esta é a categoria de peixes.',
+                'created_at' => now(),
+                'updated_at' => now(),
+                'icon' => 'fish'
+            ],
+            [
+                'name' => 'Roedores',
+                'description' => 'Esta é a categoria de Roedores.',
+                'created_at' => now(),
+                'updated_at' => now(),
+                'icon' => 'rodent'
             ]
         ]);
     }

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrderResource extends JsonResource
+class AdminResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,8 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'status' => $this->status,
-            'pet' => $this->pet ? new PetResource($this->pet) : null,
-            'adopter' => $this->adopter ? new AdopterResource($this->adopter) : null,
-            'ong' => $this->ong ? new OngResource($this->ong) : null,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
         ];
     }
 }

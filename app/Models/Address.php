@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
@@ -24,5 +25,14 @@ class Address extends Model
         'country',
         'complement',
         'reference_point',
+        'user_id'
     ];
+
+    /**
+     * Get the user that owns the address.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

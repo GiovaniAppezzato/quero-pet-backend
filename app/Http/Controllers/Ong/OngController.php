@@ -2,81 +2,59 @@
 
 namespace App\Http\Controllers\Ong;
 
-use App\Models\Ong;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreOngRequest;
-use App\Http\Requests\UpdateOngRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Ong\{StoreOngRequest,UpdateOngRequest};
+use App\Http\Resources\UserResource;
+use App\Enums\UserTypeEnum;
+use App\Models\User;
 
 class OngController extends Controller
 {
-    public function index(): JsonResponse
+    public function store(StoreOngRequest $request): UserResource
     {
-        $user = Auth::user();
+        return DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-        return response()->json([
-            'user' => $user,
-        ], 200);
-    }
-
-    public function store(StoreOngRequest $request): JsonResponse
-    {
-        DB::beginTransaction();
-
-        try{
-            $ong = $request->validated();
-
-            $ong->user()->create([
-                'email'    => $request->email,
-                'password' => $request->password
-            ]);
-
-            $ong = Ong::create([
-                'name'              => $request->name,
-                'description'       => $request->description,
-                'cnpj'              => $request->cnpj,
-                'phone'             => $request->phone,
-                'responsible_name'  => $request->responsible_name,
-                'responsible_phone' => $request->responsible_phone,
-                'responsible_cpf'   => $request->responsible_cpf,
-                'status'            => $request->status,
-            ]);
-
-            $credentials = $request->only('email', 'password');
-
-            if(Auth::attempt($credentials)){
-                /** @var User $user */
-                $user = Auth::user();
-                $token = $user->createToken('jwt');
+            if($request->hasFile('photo_path')) {
+                // TODO: Implement the upload 'photo_path' logic.
             }
 
-            DB::commit();
+            // ** Create the user record.
+            $user = User::create([
+                ...$validated['user'],
+                'password'     => bcrypt($validated['user']['password']),
+                'user_type_id' => UserTypeEnum::ONG->value,
+            ]);
 
-            return response()->json([
-                'ong' => $ong,
-                'token' => $token,
-            ], 201);
-        }catch(\Exception $e) {
-            DB::rollBack();
+            // ** Create the ong record.
+            $user->ong()->create($validated['ong']);
 
-            return response()->json([
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+            // ** Create the address record.
+            $user->address()->create($validated['address']);
+
+            return new UserResource($user);
+        });
     }
 
-    public function update(UpdateOngRequest $request, Ong $ong): JsonResponse
+    public function update(UpdateOngRequest $request)
     {
-        $data = $request->validated();
-        $ong->update($data);
+        return DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-        //Retorno em JSON, ou como uma view qualquer?
-        return response()->json([
-            'success' => true,
-            'ong' => $ong
-        ]);
+            $user = User::ongs()->findOrFail(Auth::id());
+
+            // ** Update the user record.
+            $user->update($validated['user']);
+
+            // ** Update the ong record.
+            $user->ong->update($validated['ong']);
+
+            // ** Update the address record.
+            $user->address->update($validated['address']);
+
+            return new UserResource($user);
+        });
     }
 }

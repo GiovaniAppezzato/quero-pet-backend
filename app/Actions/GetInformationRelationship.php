@@ -19,13 +19,13 @@ class GetInformationRelationship
 
     public function handle(): HasOne
     {
-        switch ($this->user->user_type_id) {
+         switch ($this->user->user_type_id) {
             case UserTypeEnum::ONG->value:
                 return $this->user->hasOne(Ong::class);
             case UserTypeEnum::ADOPTER->value:
                 return $this->user->hasOne(Adopter::class);
             default:
-                return $this->user->hasOne(Admin::class);
+               return $this->user->hasOne(Admin::class);
         }
     }
 

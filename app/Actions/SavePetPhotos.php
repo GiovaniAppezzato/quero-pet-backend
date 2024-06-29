@@ -10,9 +10,7 @@ class SavePetPhotos
      * Create a new class instance.
      */
     public function __construct()
-    {
-        //
-    }
+    {}
 
     public function handle($pet, $photos): void
     {
@@ -20,16 +18,11 @@ class SavePetPhotos
 
         foreach ($photos as $photo) {
             $timestamp = now()->timestamp;
-            $randomString = Str::random(10);
-            $hash = hash('sha256', $timestamp . $randomString);
+            $hash = hash('sha256', $timestamp . Str::random(10));
             $extension = $photo->getClientOriginalExtension();
             $filename = $hash . '.' . $extension;
-
             $path = $photo->file('pet_photo')->storeAs('pet_photos', $filename);
-
-            array_push($photosToBeInserted, [
-                'path' => $path
-            ]);
+            array_push($photosToBeInserted, ['path' => $path]);
         }
 
         $pet->photos()->insert($photosToBeInserted);

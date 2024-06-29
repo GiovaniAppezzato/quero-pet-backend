@@ -26,6 +26,7 @@ class User extends Authenticatable
     protected $fillable = [
         'email',
         'password',
+        'photo_path',
         'user_type_id',
     ];
 
@@ -57,7 +58,7 @@ class User extends Authenticatable
      */
     protected static function booted(): void
     {
-        static::addGlobalScope(new WithInformationScope);
+        // static::addGlobalScope(new WithInformationScope);
     }
 
     /**
@@ -77,11 +78,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Scope a query to include only ong users.
+     */
+    public function scopeOngs($query)
+    {
+        return $query->whereUserTypeId(UserTypeEnum::ONG->value);
+    }
+
+    /**
      * Get the information associated with the User
      */
     public function information(): HasOne
     {
-        return (new GetInformationRelationship($this))->handle();
+        return GetInformationRelationship::run($this);
     }
 
     /**
