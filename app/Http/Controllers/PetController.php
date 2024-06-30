@@ -14,7 +14,7 @@ class PetController extends Controller
 {
     public function index()
     {
-        return PetResource::collection(Pet::all());
+        return PetResource::collection(Pet::with('ong.user.address')->get());
     }
 
     public function show(Pet $pet): PetResource
@@ -29,7 +29,7 @@ class PetController extends Controller
 
             $pet = Pet::create($validated);
 
-            if($request->has('photos')) {
+            if ($request->has('photos')) {
                 (new SavePetPhotos())->handle($pet, $validated->photos);
             }
 
