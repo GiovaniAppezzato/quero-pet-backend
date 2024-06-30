@@ -16,16 +16,23 @@ class AdminController extends Controller
     {
         return DB::transaction(function () use ($request) {
             $validated = $request->validated();
-
-            if($request->hasFile('photo_path')) {
-                // TODO: Implement the upload 'photo_path' logic.
-            }
-
+            
             $user = User::create([
                 ...$validated['user'],
                 'password'     => bcrypt($validated['user']['password']),
                 'user_type_id' => UserTypeEnum::ADMIN->value
             ]);
+            
+            if($request->hasFile('photo_path')) {
+                $file = $request->file('photo');
+                $extension = $file->extension();
+
+                $hash = md5($file->getClientOriginalName() . strtotime('now')) . "." . $extension;
+                $file->storeAs('users', $hash);
+
+                $user->photo_path = $hash;
+                $user->save();
+            }
 
             $user->admin()->create($validated['admin']);
 

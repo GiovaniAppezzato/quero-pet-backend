@@ -17,16 +17,24 @@ class OngController extends Controller
         return DB::transaction(function () use ($request) {
             $validated = $request->validated();
 
-            if($request->hasFile('photo_path')) {
-                // TODO: Implement the upload 'photo_path' logic.
-            }
-
+            
             // ** Create the user record.
             $user = User::create([
                 ...$validated['user'],
                 'password'     => bcrypt($validated['user']['password']),
                 'user_type_id' => UserTypeEnum::ONG->value,
             ]);
+            
+            if($request->hasFile('photo_path')) {
+                $file = $request->file('photo');
+                $extension = $file->extension();
+
+                $hash = md5($file->getClientOriginalName() . strtotime('now')) . "." . $extension;
+                $file->storeAs('users', $hash);
+
+                $user->photo_path = $hash;
+                $user->save();
+            }
 
             // ** Create the ong record.
             $user->ong()->create($validated['ong']);

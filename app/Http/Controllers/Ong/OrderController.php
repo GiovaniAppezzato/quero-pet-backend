@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Ong;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\OrderResource;
+use App\Http\Requests\Ong\OngOrderRequest;
 
 class OrderController extends Controller
 {
@@ -22,7 +24,7 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
-    public function approveOrder(ApproveOrderRequest $request)
+    public function approveOrder(OngOrderRequest $request)
     {
         $orderId = $request->order_id;
 
@@ -36,7 +38,7 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
-    public function cancelOrder(CancelOrderRequest $request)
+    public function cancelOrder(OngOrderRequest $request)
     {
         $orderId = $request->order_id;
 
