@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->enum('status', ['pending', 'adopted', 'canceled'])->default('pending');
-            $table->string('criminal_record');
             $table->dateTime('canceled_at')->nullable();
             $table->dateTime('adopted_at')->nullable();
             $table->foreignId('pet_id')->constrained()->onDelete('cascade');

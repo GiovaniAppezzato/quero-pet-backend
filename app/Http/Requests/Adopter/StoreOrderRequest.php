@@ -23,7 +23,6 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'pet_id' => ['required', 'exists:pets,id'],
-            'criminal_record' => ['required', 'image', 'mimes:jpeg,png,jpg,pdf', 'max:5120']
         ];
     }
 }

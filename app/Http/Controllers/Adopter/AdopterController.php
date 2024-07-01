@@ -36,7 +36,7 @@ class AdopterController extends Controller
                 $extension = $file->extension();
 
                 $hash = md5($file->getClientOriginalName() . strtotime('now')) . "." . $extension;
-                $file->storeAs('users', $hash);
+                $file->storeAs('/public/users', $hash);
 
                 $user->photo_path = $hash;
                 $user->save();

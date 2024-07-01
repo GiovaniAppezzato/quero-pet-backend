@@ -12,7 +12,6 @@ class Order extends Model
 
     protected $fillable = [
         'status',
-        'criminal_record',
         'canceled_at',
         'adopted_at',
         'pet_id',
